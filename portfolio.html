@@ -987,6 +987,10 @@
                 margin: 0 auto;
             }
 
+            .hero-buttons {
+                justify-content: center;
+            }
+
             .services-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -998,35 +1002,117 @@
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .timeline {
+                padding-left: 2rem;
+            }
+
+            .section-header h2 {
+                font-size: 2.5rem;
+            }
         }
 
         @media (max-width: 768px) {
+            nav {
+                padding: 1rem 5%;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
             .nav-links {
                 display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(255, 255, 255, 0.98);
+                flex-direction: column;
+                gap: 0;
+                padding: 1rem 0;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                width: 100%;
+                text-align: center;
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .cta-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.85rem;
             }
 
             .mobile-menu {
                 display: flex;
             }
 
+            .hero {
+                padding: 6rem 5% 3rem;
+                min-height: auto;
+            }
+
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
             }
 
             .hero p {
                 font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .hero-tag {
+                font-size: 0.85rem;
+                padding: 0.4rem 1rem;
+            }
+
+            .btn-primary, .btn-secondary {
+                padding: 0.9rem 2rem;
+                font-size: 0.95rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .hero-buttons button {
+                width: 100%;
             }
 
             .services-grid {
                 grid-template-columns: 1fr;
             }
 
+            .stats {
+                margin: -30px 5% 0;
+                padding: 2rem;
+            }
+
             .stats-grid {
                 grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .stat-item h3 {
+                font-size: 2.5rem;
             }
 
             .contact-content {
                 grid-template-columns: 1fr;
+                gap: 2rem;
             }
 
             .hero-images {
@@ -1051,6 +1137,140 @@
             .img-4 {
                 width: 130px;
                 height: 150px;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .section-header p {
+                font-size: 1rem;
+            }
+
+            .service-card,
+            .project-card,
+            .contact-form {
+                padding: 2rem;
+            }
+
+            .timeline {
+                padding-left: 1.5rem;
+            }
+
+            .timeline-item {
+                padding-left: 1.5rem;
+            }
+
+            .timeline-item h3 {
+                font-size: 1.5rem;
+            }
+
+            .services,
+            .projects,
+            .experience,
+            .contact,
+            .about {
+                padding: 4rem 5%;
+            }
+
+            .social-links {
+                gap: 1rem;
+            }
+
+            .social-link {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 0.95rem;
+            }
+
+            .logo {
+                font-size: 1.3rem;
+            }
+
+            .stats {
+                padding: 1.5rem;
+            }
+
+            .stat-item h3 {
+                font-size: 2rem;
+            }
+
+            .stat-item p {
+                font-size: 0.9rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .service-card h3,
+            .project-card h3 {
+                font-size: 1.3rem;
+            }
+
+            .hero-images {
+                height: 300px;
+            }
+
+            .img-1 {
+                width: 150px;
+                height: 200px;
+            }
+
+            .img-2 {
+                width: 130px;
+                height: 150px;
+            }
+
+            .img-3 {
+                width: 110px;
+                height: 130px;
+            }
+
+            .img-4 {
+                width: 100px;
+                height: 110px;
+            }
+
+            .btn-primary, .btn-secondary {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .contact-form,
+            .service-card,
+            .project-card {
+                padding: 1.5rem;
+            }
+
+            .timeline-item h3 {
+                font-size: 1.3rem;
+            }
+
+            .timeline-item h4 {
+                font-size: 1rem;
+            }
+
+            .about-text h3 {
+                font-size: 1.5rem;
+            }
+
+            .about-text p {
+                font-size: 1rem;
+            }
+
+            .highlight-item {
+                padding: 1rem;
             }
         }
 
@@ -1586,7 +1806,21 @@
         const navLinks = document.querySelector('.nav-links');
 
         mobileMenu.addEventListener('click', () => {
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('nav')) {
+                navLinks.classList.remove('active');
+            }
         });
     </script>
 </body>
