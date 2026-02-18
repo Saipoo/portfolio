@@ -1,7 +1,9 @@
 /**
- * Contact form API – sends name, email, subject, message to your inbox.
- * Deploy on Vercel; set env: RESEND_API_KEY, RECIPIENT_EMAIL (your email).
- * Get a free API key at https://resend.com (free tier: 100 emails/day).
+ * Contact form API – sends name, email, subject, message to your inbox,
+ * and sends an auto-reply to the visitor when possible.
+ * Deploy on Vercel. Required env: RESEND_API_KEY, RECIPIENT_EMAIL.
+ * Optional: RESEND_FROM_EMAIL = your verified-domain sender (e.g. "noreply@yourdomain.com")
+ * so auto-reply can be delivered to visitors (Resend restricts onboarding@resend.dev to limited recipients).
  */
 
 const RESEND_API = 'https://api.resend.com/emails';
@@ -21,6 +23,8 @@ export default async function handler(req, res) {
 
   const recipient = process.env.RECIPIENT_EMAIL;
   const apiKey = process.env.RESEND_API_KEY;
+  // Optional: set to your verified domain sender (e.g. "Poorna Seshaseyan <noreply@yourdomain.com>") so auto-reply can be sent to visitors
+  const fromAddress = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
 
   if (!recipient || !apiKey) {
     return res.status(500).json({
@@ -58,7 +62,7 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        from: 'onboarding@resend.dev',
+        from: fromAddress,
         to: recipient,
         reply_to: email,
         subject: `[Portfolio] ${subject}`,
@@ -82,7 +86,7 @@ export default async function handler(req, res) {
       <p>— Poorna's portfolio</p>
     `;
     const autoReplyPayload = {
-      from: 'Poorna Seshaseyan <onboarding@resend.dev>',
+      from: fromAddress.includes('<') ? fromAddress : `Poorna Seshaseyan <${fromAddress}>`,
       to: [email.trim()],
       reply_to: [recipient],
       subject: `Re: ${subject} – Thanks for reaching out`,
@@ -98,11 +102,8 @@ export default async function handler(req, res) {
     });
     const autoReplyData = await autoReplyRes.json().catch(() => ({}));
     if (!autoReplyRes.ok) {
-      console.error('Auto-reply failed:', autoReplyRes.status, autoReplyData);
-      return res.status(500).json({
-        error: 'Message received, but auto-reply could not be sent. Please check server logs.',
-        details: autoReplyData.message || autoReplyData,
-      });
+      console.error('Auto-reply failed (visitor may not receive it until you set RESEND_FROM_EMAIL to a verified domain):', autoReplyRes.status, autoReplyData);
+      // Still return success so the form works and you get the message; auto-reply is best-effort
     }
 
     return res.status(200).json({ success: true });
