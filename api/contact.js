@@ -74,6 +74,27 @@ export default async function handler(req, res) {
       });
     }
 
+    // Automated reply to the user who sent the message
+    const autoReplyHtml = `
+      <p>Hi ${escapeHtml(name)},</p>
+      <p>Thanks for getting in touch! You've reached <strong>Poorna Seshaseyan</strong> — a Gen AI–focused developer who specializes in machine learning, NLP, and intelligent automation. He works on scalable AI pipelines, full-stack solutions, and has done 25+ projects across AI, full-stack development, and automation systems. You've reached the right person; he knows this space inside out.</p>
+      <p>He's currently busy with a lot of work and projects but will take some time and get back to you soon. Stay tuned!</p>
+      <p>— Poorna's portfolio</p>
+    `;
+    await fetch(RESEND_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        from: 'onboarding@resend.dev',
+        to: email,
+        subject: `Re: ${subject} – Thanks for reaching out`,
+        html: autoReplyHtml,
+      }),
+    });
+
     return res.status(200).json({ success: true });
   } catch (err) {
     return res.status(500).json({ error: 'Failed to send email' });
