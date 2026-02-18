@@ -1821,11 +1821,41 @@
             });
         });
 
-        // Form Submission
+        // Form Submission – sends to contact API
+        const CONTACT_API = '/api/contact';
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('Thank you for your message! I\'ll get back to you soon.');
-            this.reset();
+            const form = this;
+            const submitBtn = form.querySelector('.submit-btn');
+            const origText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+            fetch(CONTACT_API, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: form.name.value.trim(),
+                    email: form.email.value.trim(),
+                    subject: form.subject.value.trim(),
+                    message: form.message.value.trim()
+                })
+            })
+            .then(function(r) { return r.json().then(function(data) { return { ok: r.ok, data }; }); })
+            .then(function(result) {
+                if (result.ok) {
+                    alert('Thank you for your message! I\'ll get back to you soon.');
+                    form.reset();
+                } else {
+                    alert(result.data && result.data.error ? result.data.error : 'Something went wrong. Please try again.');
+                }
+            })
+            .catch(function() {
+                alert('Something went wrong. Please try again.');
+            })
+            .finally(function() {
+                submitBtn.disabled = false;
+                submitBtn.textContent = origText;
+            });
         });
 
         // Counter Animation
