@@ -81,19 +81,29 @@ export default async function handler(req, res) {
       <p>He's currently busy with a lot of work and projects but will take some time and get back to you soon. Stay tuned!</p>
       <p>— Poorna's portfolio</p>
     `;
-    await fetch(RESEND_API, {
+    const autoReplyPayload = {
+      from: 'Poorna Seshaseyan <onboarding@resend.dev>',
+      to: [email.trim()],
+      reply_to: [recipient],
+      subject: `Re: ${subject} – Thanks for reaching out`,
+      html: autoReplyHtml,
+    };
+    const autoReplyRes = await fetch(RESEND_API, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${apiKey}`,
       },
-      body: JSON.stringify({
-        from: 'onboarding@resend.dev',
-        to: email,
-        subject: `Re: ${subject} – Thanks for reaching out`,
-        html: autoReplyHtml,
-      }),
+      body: JSON.stringify(autoReplyPayload),
     });
+    const autoReplyData = await autoReplyRes.json().catch(() => ({}));
+    if (!autoReplyRes.ok) {
+      console.error('Auto-reply failed:', autoReplyRes.status, autoReplyData);
+      return res.status(500).json({
+        error: 'Message received, but auto-reply could not be sent. Please check server logs.',
+        details: autoReplyData.message || autoReplyData,
+      });
+    }
 
     return res.status(200).json({ success: true });
   } catch (err) {
