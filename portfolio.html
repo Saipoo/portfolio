@@ -2317,6 +2317,59 @@
                 height: 200px;
             }
         }
+
+        /* ───── RESPONSIVE FIXES ───── */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1001;
+        }
+        .menu-toggle span { width: 24px; height: 2px; background: var(--blue); transition: 0.3s; }
+        .mobile-only-btns { display: none; }
+
+        @media (max-width: 1024px) {
+            .hero-inner { flex-direction: column; text-align: center; padding-top: 40px; }
+            .hero-left { max-width: 100%; }
+            .hero-btns { justify-content: center; }
+            .hero-stats { justify-content: center; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .hero-photo-wrap { margin: 40px auto 0; width: 300px; height: 300px; }
+            .ach-flex { flex-direction: column; }
+            .ach-left { width: 100%; margin-bottom: 30px; }
+            .ach-right { width: 100%; }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            .desktop-btns { display: none !important; }
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 280px; height: 100vh;
+                background: #fff; flex-direction: column; padding: 80px 30px;
+                box-shadow: -10px 0 30px rgba(0,0,0,0.1); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 1000; overflow-y: auto; align-items: flex-start;
+            }
+            .nav-links.active { right: 0; }
+            .nav-link { font-size: 16px; padding: 15px 0; border-bottom: 1px solid var(--off); width: 100%; border-radius: 0; }
+            .mobile-only-btns { display: flex; flex-direction: column; gap: 15px; width: 100%; margin-top: 30px; }
+            
+            .hero-h1 { font-size: 36px; }
+            .section-pad { padding: 60px 0; }
+            .skills-grid, .p-grid { grid-template-columns: 1fr; }
+            .fact-grid-v { grid-template-columns: 1fr; }
+            .footer-top { grid-template-columns: 1fr; gap: 40px; }
+            
+            .nav-inner { padding: 0 20px; }
+            .hero-stats { grid-template-columns: 1fr; }
+        }
+
+        /* Hamburger Animation */
+        .menu-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .menu-toggle.active span:nth-child(2) { opacity: 0; }
+        .menu-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
     </style>
 </head>
 
@@ -2328,20 +2381,28 @@
                 <div class="nav-logo-mark">APS</div>
                 <span class="nav-logo-text">Poorna<span>.dev</span></span>
             </a>
-            <div class="nav-links">
-                <a class="nav-link" href="#about">About</a>
-                <a class="nav-link" href="#skills">Expertise</a>
-                <a class="nav-link" href="#projects">Projects</a>
-                <a class="nav-link" href="#certifications">Certifications</a>
-                <a class="nav-link" href="#experience">Experience</a>
-                <a class="nav-link" href="#achievements">Achievements</a>
-                <a class="nav-link" href="#usecases">Use Cases</a>
-                <a class="nav-link" href="#contact">Contact</a>
+            <div class="nav-links" id="navLinks">
+                <a class="nav-link" href="#about" onclick="toggleMenu()">About</a>
+                <a class="nav-link" href="#skills" onclick="toggleMenu()">Expertise</a>
+                <a class="nav-link" href="#projects" onclick="toggleMenu()">Projects</a>
+                <a class="nav-link" href="#experience" onclick="toggleMenu()">Experience</a>
+                <a class="nav-link" href="#achievements" onclick="toggleMenu()">Achievements</a>
+                <a class="nav-link" href="#certifications" onclick="toggleMenu()">Certifications</a>
+                <a class="nav-link" href="#usecases" onclick="toggleMenu()">Use Cases</a>
+                <a class="nav-link" href="#contact" onclick="toggleMenu()">Contact</a>
+                <div class="mobile-only-btns">
+                    <a class="nav-cta-outline" href="./POORNARESUMEALLTIMEBEST.pdf" target="_blank">Resume</a>
+                    <a class="nav-cta" href="#contact">Get In Touch</a>
+                </div>
             </div>
             <div class="nav-spacer"></div>
-            <a class="nav-cta-outline" href="./POORNARESUMEALLTIMEBEST.pdf" target="_blank"
-                style="margin-right:10px">Resume</a>
-            <a class="nav-cta" href="#contact">Get In Touch</a>
+            <div class="desktop-btns" style="display: flex; gap: 10px;">
+                <a class="nav-cta-outline" href="./POORNARESUMEALLTIMEBEST.pdf" target="_blank">Resume</a>
+                <a class="nav-cta" href="#contact">Get In Touch</a>
+            </div>
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
     <!-- HERO -->
@@ -3781,6 +3842,14 @@
                     }
                 }
             });
+        }
+
+        // ── Mobile Menu Toggle ──
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            const menuToggle = document.querySelector('.menu-toggle');
+            navLinks.classList.toggle('active');
+            menuToggle.classList.toggle('active');
         }
     </script>
 </body>
