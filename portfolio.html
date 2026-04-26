@@ -2551,6 +2551,16 @@
                 text-align: center;
                 gap: 40px;
             }
+
+            .hero-photo-wrap {
+                width: 280px !important;
+                height: 280px !important;
+                margin: 0 auto;
+            }
+
+            .menu-toggle span {
+                background: #1e5fc2 !important; /* Force visible blue */
+            }
         }
     </style>
 </head>
@@ -2739,8 +2749,9 @@
     <div class="from-bottom" style="max-width: 1200px; margin: 10px auto 60px auto; padding: 0 24px;">
         <div
             style="width: 100%; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 15px 40px rgba(0,0,0,0.12); background: #000; position: relative; max-height: 520px;">
-            <video id="portfolio-video" muted autoplay playsinline controls loop controlsList="nodownload noplaybackrate"
-                disablePictureInPicture disableRemotePlayback oncontextmenu="return false;" preload="metadata"
+            <video id="portfolio-video" muted autoplay playsinline controls loop
+                controlsList="nodownload noplaybackrate" disablePictureInPicture disableRemotePlayback
+                oncontextmenu="return false;" preload="metadata"
                 style="width: 100%; max-height: 520px; display: block; object-fit: cover;"
                 poster="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1280&q=80">
                 <source src="./AI Developer Portfolio - Poorna (Personalized)_720p.mp4" type="video/mp4">
@@ -4005,17 +4016,28 @@
         // ── Video Behavior Logic ──
         const portfolioVideo = document.getElementById('portfolio-video');
         if (portfolioVideo) {
-            // IntersectionObserver for scroll-based mute/unmute
+            let userUnmuted = false;
+            let userPaused = false;
+            let autoAction = false;
+
+            portfolioVideo.onpause = () => { if (!document.hidden && !autoAction) userPaused = true; };
+            portfolioVideo.onplay = () => { userPaused = false; };
+            portfolioVideo.onvolumechange = () => { if (!autoAction) userUnmuted = !portfolioVideo.muted; };
+
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        portfolioVideo.muted = true; // keep muted for autoplay to work
-                        portfolioVideo.play().catch(() => { });
-                        // unmute only after user has interacted with page
-                        if (hasUserInteracted) portfolioVideo.muted = false;
+                        if (!userPaused) {
+                            autoAction = true;
+                            portfolioVideo.muted = !userUnmuted;
+                            portfolioVideo.play().catch(() => { });
+                            setTimeout(() => { autoAction = false; }, 150);
+                        }
                     } else {
+                        autoAction = true;
                         portfolioVideo.muted = true;
                         portfolioVideo.pause();
+                        setTimeout(() => { autoAction = false; }, 150);
                     }
                 });
             }, { threshold: 0.5 });
@@ -4029,14 +4051,17 @@
             // Tab switch/Minimize logic
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden) {
+                    autoAction = true;
                     portfolioVideo.pause();
-                    portfolioVideo.muted = true;
+                    setTimeout(() => { autoAction = false; }, 150);
                 } else {
                     const rect = portfolioVideo.getBoundingClientRect();
                     const inView = rect.top < window.innerHeight && rect.bottom > 0;
-                    if (inView) {
+                    if (inView && !userPaused) {
+                        autoAction = true;
+                        portfolioVideo.muted = !userUnmuted;
                         portfolioVideo.play().catch(() => { });
-                        if (hasUserInteracted) portfolioVideo.muted = false;
+                        setTimeout(() => { autoAction = false; }, 150);
                     }
                 }
             });
