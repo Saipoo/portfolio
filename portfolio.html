@@ -2580,11 +2580,21 @@
             }
 
             .nav-links {
-                z-index: 2000 !important; /* Above everything */
+                z-index: 2500 !important; /* Extremely high */
+                display: flex !important;
+                visibility: visible !important;
+                background: #ffffff !important;
+                box-shadow: -10px 0 30px rgba(0,0,0,0.2) !important;
+            }
+
+            .nav-links.active {
+                right: 0 !important;
+                opacity: 1 !important;
+                visibility: visible !important;
             }
 
             .menu-toggle {
-                z-index: 2100 !important; /* Above menu */
+                z-index: 2600 !important; /* Above menu */
             }
 
             .menu-toggle span {
