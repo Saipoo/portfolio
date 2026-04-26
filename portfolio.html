@@ -4000,6 +4000,21 @@
             document.addEventListener('scroll', () => { hasUserInteracted = true; }, { once: true });
 
             observer.observe(portfolioVideo);
+
+            // Tab switch/Minimize logic
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    portfolioVideo.pause();
+                    portfolioVideo.muted = true;
+                } else {
+                    const rect = portfolioVideo.getBoundingClientRect();
+                    const inView = rect.top < window.innerHeight && rect.bottom > 0;
+                    if (inView) {
+                        portfolioVideo.play().catch(() => { });
+                        if (hasUserInteracted) portfolioVideo.muted = false;
+                    }
+                }
+            });
         }
 
         // ── Mobile Menu Toggle ──
