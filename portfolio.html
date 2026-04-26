@@ -2472,13 +2472,20 @@
         }
 
         /* Zoom / fluid layout fix */
-        .hero-inner, .about-grid, .contact-grid,
-        .cert-split-container, .ach-split-container {
+        .hero-inner,
+        .about-grid,
+        .contact-grid,
+        .cert-split-container,
+        .ach-split-container {
             min-width: 0;
         }
 
-        .sec-inner, .exp-inner, .uc-inner,
-        .stats-inner, .trusted-inner, .footer-inner {
+        .sec-inner,
+        .exp-inner,
+        .uc-inner,
+        .stats-inner,
+        .trusted-inner,
+        .footer-inner {
             max-width: 1320px;
             width: 100%;
             box-sizing: border-box;
@@ -2490,41 +2497,59 @@
         }
 
         /* Prevent text overflow on zoom-in */
-        .hero-h1, .sec-h2, .tl-role {
+        .hero-h1,
+        .sec-h2,
+        .tl-role {
             word-break: break-word;
         }
 
         /* Mobile: fix cert/achievement sliders */
         @media (max-width: 768px) {
+
             .cert-split-container,
             .ach-split-container {
                 grid-template-columns: 1fr;
             }
+
             .cert-image-slider,
             .ach-image-slider {
                 height: 300px;
             }
+
             .cert-image-item,
             .ach-image-item {
                 height: 300px;
             }
+
             .proj-grid {
                 grid-template-columns: 1fr !important;
             }
+
             .uc-panel.active {
                 grid-template-columns: 1fr !important;
             }
+
             .footer-top {
                 grid-template-columns: 1fr !important;
             }
+
             .stats-grid {
                 grid-template-columns: 1fr 1fr !important;
             }
+
             .skills-grid {
                 grid-template-columns: 1fr !important;
             }
+
             .sec-caps-grid {
                 grid-template-columns: 1fr !important;
+            }
+
+            .hero-inner,
+            .about-grid {
+                grid-template-columns: 1fr !important;
+                text-align: center;
+                gap: 40px;
             }
         }
     </style>
@@ -2714,8 +2739,8 @@
     <div class="from-bottom" style="max-width: 1200px; margin: 10px auto 60px auto; padding: 0 24px;">
         <div
             style="width: 100%; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 15px 40px rgba(0,0,0,0.12); background: #000; position: relative; max-height: 520px;">
-            <video id="portfolio-video" muted autoplay controls loop controlsList="nodownload noplaybackrate" disablePictureInPicture
-                disableRemotePlayback oncontextmenu="return false;" preload="metadata"
+            <video id="portfolio-video" muted autoplay playsinline controls loop controlsList="nodownload noplaybackrate"
+                disablePictureInPicture disableRemotePlayback oncontextmenu="return false;" preload="metadata"
                 style="width: 100%; max-height: 520px; display: block; object-fit: cover;"
                 poster="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1280&q=80">
                 <source src="./AI Developer Portfolio - Poorna (Personalized)_720p.mp4" type="video/mp4">
@@ -3985,7 +4010,7 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         portfolioVideo.muted = true; // keep muted for autoplay to work
-                        portfolioVideo.play().catch(() => {});
+                        portfolioVideo.play().catch(() => { });
                         // unmute only after user has interacted with page
                         if (hasUserInteracted) portfolioVideo.muted = false;
                     } else {
