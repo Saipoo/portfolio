@@ -2547,18 +2547,28 @@
 
             .hero-inner,
             .about-grid {
-                grid-template-columns: 1fr !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
                 text-align: center;
                 gap: 40px;
+            }
+
+            .hero-right {
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                width: 100% !important;
             }
 
             .hero-photo-wrap {
                 width: 280px !important;
                 height: 280px !important;
-                margin: 0 auto;
+                margin: 0 auto !important;
                 display: block !important;
                 visibility: visible !important;
                 opacity: 1 !important;
+                flex-shrink: 0;
             }
 
             .hero-photo-wrap img {
@@ -2566,6 +2576,15 @@
                 width: 100% !important;
                 height: 100% !important;
                 object-fit: cover !important;
+                border-radius: 20px !important;
+            }
+
+            .nav-links {
+                z-index: 2000 !important; /* Above everything */
+            }
+
+            .menu-toggle {
+                z-index: 2100 !important; /* Above menu */
             }
 
             .menu-toggle span {
@@ -2574,6 +2593,8 @@
 
             .nav-link {
                 color: #1e5fc2 !important; /* Force visible text in menu */
+                width: 100%;
+                text-align: center;
             }
         }
     </style>
