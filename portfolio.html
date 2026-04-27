@@ -215,20 +215,38 @@
 
         /* ───── HERO ───── */
         #hero {
-            background: var(--grad);
             position: relative;
             overflow: hidden;
             padding: 90px 0 0;
             min-height: 92vh;
             display: flex;
             flex-direction: column;
+            background: #000; /* Fallback */
+        }
+
+        .hero-video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .hero-video-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(10, 20, 40, 0.6), rgba(10, 20, 40, 0.8));
+            z-index: 1;
         }
 
         .hero-bg-circles {
             position: absolute;
             inset: 0;
             pointer-events: none;
-            overflow: hidden
+            overflow: hidden;
+            z-index: 2;
         }
 
         .hero-bg-circles span {
@@ -264,9 +282,12 @@
             background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
             background-size: 60px 60px;
             pointer-events: none;
+            z-index: 3;
         }
 
         .hero-inner {
+            position: relative;
+            z-index: 10;
             max-width: 1320px;
             margin: 0 auto;
             padding: 0 32px;
@@ -2014,7 +2035,7 @@
             height: 8px;
             border-radius: 50%;
             background: #4aff9e;
-            animation: blink 2s infinite
+            animation: blink 2s infinite;
         }
 
         /* ───── SCROLL ANIMATIONS ───── */
@@ -2471,15 +2492,6 @@
             transform: translateY(-7px) rotate(-45deg);
         }
 
-        /* Zoom / fluid layout fix */
-        .hero-inner,
-        .about-grid,
-        .contact-grid,
-        .cert-split-container,
-        .ach-split-container {
-            min-width: 0;
-        }
-
         .sec-inner,
         .exp-inner,
         .uc-inner,
@@ -2491,13 +2503,179 @@
             box-sizing: border-box;
         }
 
-        /* Fix hero stats wrapping at mid-zoom */
-        .hero-stats {
-            flex-wrap: wrap;
+        /* Expertise Section Styles (Desktop) */
+        .hanging-line-wrap {
+            position: relative;
+            padding-top: 20px;
+            margin-bottom: 80px;
+            overflow: visible;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        /* Prevent text overflow on zoom-in */
-        .hero-h1,
+        .hanging-line {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;
+            height: 10px;
+            background: #4a3728;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 5;
+        }
+
+        .hanging-line::before, .hanging-line::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            width: 32px;
+            height: 32px;
+            background: #2c1e14;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+            border: 3px solid #634a39;
+        }
+
+        .hanging-line::before { left: -16px; }
+        .hanging-line::after { right: -16px; }
+
+        .skills-grid {
+            display: flex !important;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 50px;
+            padding: 90px 0 0 0;
+            list-style: none;
+            position: relative;
+            z-index: 1;
+            width: 100%;
+        }
+
+        .skill-reveal {
+            display: flex;
+            transform-origin: top center;
+        }
+
+        .skill-card-animate {
+            display: flex;
+            transform-origin: top center;
+            position: relative;
+            padding-top: 40px;
+            margin-top: -35px;
+            animation: cardSwing 3s ease-in-out infinite alternate !important;
+            will-change: transform;
+        }
+
+        @keyframes cardSwing {
+            0% { transform: rotate(-4deg); }
+            100% { transform: rotate(4deg); }
+        }
+
+        .skill-card-animate:nth-child(even) { animation-delay: -1.5s; }
+
+        /* The Clothespin Clip */
+        .skill-card-animate::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 52px;
+            background: #fdf5e6; /* Light wood color */
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            z-index: 25;
+            border: 1px solid #e5d3b3;
+        }
+
+        /* The Clip Metal Spring */
+        .skill-card-animate::after {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 18px;
+            height: 3px;
+            background: #aab; /* Metal spring */
+            z-index: 26;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            border-radius: 2px;
+        }
+
+        .skill-card {
+            position: relative;
+            width: 230px; 
+            background: #fff;
+            padding: 12px 12px 25px 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            border-radius: 2px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ddd;
+            transition: background 0.3s ease;
+        }
+
+        .skill-img {
+            width: 100%;
+            height: 145px;
+            background: #f0f0f0;
+            margin-bottom: 12px;
+            overflow: hidden;
+            border: 1px solid #eee;
+            position: relative;
+        }
+
+        .skill-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            backface-visibility: hidden;
+        }
+
+        .skill-card:hover .skill-img img {
+            transform: scale(1.1);
+        }
+
+        .skill-name {
+            font-size: 16px !important;
+            font-weight: 800 !important;
+            color: #111 !important;
+            margin-bottom: 6px !important;
+            text-align: left;
+        }
+
+        .skill-desc {
+            font-size: 12px !important;
+            color: #555 !important;
+            line-height: 1.4 !important;
+            margin-bottom: 12px !important;
+            text-align: left;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: auto;
+        }
+
+        .s-tag {
+            font-size: 9px !important;
+            padding: 2px 6px !important;
+            background: #f1f5f9 !important;
+            color: #1e5fc2 !important;
+            border-radius: 2px !important;
+            border: 1px solid #e2e8f0 !important;
+            font-weight: 700 !important;
+        }
+
         .sec-h2,
         .tl-role {
             word-break: break-word;
@@ -2606,6 +2784,19 @@
                 width: 100%;
                 text-align: center;
             }
+
+            /* Mobile Overrides for Skills */
+            .hanging-line-wrap { padding-top: 20px; }
+            .hanging-line { display: none; }
+            .skill-card {
+                animation: none !important;
+                transform: none !important;
+                width: 90% !important;
+                max-width: 320px;
+                margin: 0 auto;
+            }
+            .skill-card::before { display: none; }
+            .skills-grid { gap: 25px; }
         }
     </style>
 </head>
@@ -2644,6 +2835,10 @@
     </nav>
     <!-- HERO -->
     <section id="hero">
+        <video class="hero-video-bg" autoplay muted loop playsinline>
+            <source src="./Futuristic_Cinematic_Portfolio_Video_Generation.mp4" type="video/mp4">
+        </video>
+        <div class="hero-video-overlay"></div>
         <div class="hero-bg-circles">
             <span></span><span></span><span></span>
         </div>
@@ -2808,126 +3003,99 @@
     </div>
 
     <!-- SKILLS / EXPERTISE -->
-    <section class="sec" id="skills" style="background:var(--off)">
+    <section class="sec" id="skills" style="background:#1a1a2e; color: #fff;">
         <div class="sec-inner">
             <div class="skills-header"
-                style="text-align:center; margin-bottom: 56px; display: flex; flex-direction: column; align-items: center;">
+                style="text-align:center; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center;">
                 <div class="from-bottom" style="display: flex; flex-direction: column; align-items: center;">
-                    <div class="sec-tag">Technical Expertise</div>
-                    <h2 class="sec-h2">What I <em>Specialize In</em></h2>
-                    <p class="sec-sub">Specialized skills in AI/ML, full-stack development, and intelligent automation
-                        systems.</p>
+                    <div class="sec-tag" style="background: rgba(255,255,255,0.1); color: #fff;">Technical Expertise</div>
+                    <h2 class="sec-h2" style="color:#fff;">What I <em>Specialize In</em></h2>
+                    <p class="sec-sub" style="color: rgba(255,255,255,0.7);">Specialized skills developed with precision, delivered with passion.</p>
                 </div>
             </div>
-            <div class="skills-grid">
-                <div class="skill-card from-bottom d1">
-                    <div class="skill-icon">
-                        <svg fill="none" height="22" viewbox="0 0 24 24" width="22">
-                            <path d="M12 2a10 10 0 100 20A10 10 0 0012 2z" stroke="#1e5fc2" stroke-width="1.8"></path>
-                            <path d="M8 12h8M12 8v8" stroke="#1e5fc2" stroke-linecap="round" stroke-width="1.8"></path>
-                        </svg>
+
+            <!-- Row 1 -->
+            <div class="hanging-line-wrap">
+                <div class="hanging-line"></div>
+                <div class="skills-grid">
+                    <div class="skill-reveal from-bottom d1">
+                        <div class="skill-card-animate">
+                            <div class="skill-card">
+                                <div class="skill-img"><img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=500&q=80" alt="AI"></div>
+                                <div class="skill-name">Generative AI & LLM</div>
+                                <div class="skill-desc">Building intelligent systems powered by large language models and RAG architectures.</div>
+                                <div class="skill-tags">
+                                    <span class="s-tag">LLM Workflows</span><span class="s-tag">RAG Systems</span><span class="s-tag">Embeddings</span><span class="s-tag">Prompt Engineering</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="skill-name">Generative AI &amp; LLM</div>
-                    <div class="skill-desc">Building intelligent systems powered by large language models, RAG
-                        architectures, and generative AI pipelines with enterprise-scale deployment.</div>
-                    <div class="skill-tags">
-                        <span class="s-tag">LLM Workflows</span>
-                        <span class="s-tag">RAG Systems</span>
-                        <span class="s-tag">Embeddings</span>
-                        <span class="s-tag">Prompt Engineering</span>
+                    <div class="skill-reveal from-bottom d2">
+                        <div class="skill-card-animate">
+                            <div class="skill-card">
+                                <div class="skill-img"><img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=500&q=80" alt="ML"></div>
+                                <div class="skill-name">Machine Learning & NLP</div>
+                                <div class="skill-desc">Developing intelligent ML models for classification and natural language processing.</div>
+                                <div class="skill-tags">
+                                    <span class="s-tag">Scikit-learn</span><span class="s-tag">Transformers</span><span class="s-tag">XGBoost</span><span class="s-tag">OpenCV</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="skill-card from-bottom d2">
-                    <div class="skill-icon">
-                        <svg fill="none" height="22" viewbox="0 0 24 24" width="22">
-                            <rect height="7" rx="1.5" stroke="#1e5fc2" stroke-width="1.8" width="7" x="3" y="3"></rect>
-                            <rect height="7" rx="1.5" stroke="#1e5fc2" stroke-width="1.8" width="7" x="14" y="3"></rect>
-                            <rect height="7" rx="1.5" stroke="#1e5fc2" stroke-width="1.8" width="7" x="3" y="14"></rect>
-                            <rect height="7" rx="1.5" stroke="#1e5fc2" stroke-width="1.8" width="7" x="14" y="14">
-                            </rect>
-                        </svg>
-                    </div>
-                    <div class="skill-name">Machine Learning &amp; NLP</div>
-                    <div class="skill-desc">Developing intelligent ML models for classification, prediction, and natural
-                        language processing with production-grade accuracy benchmarks.</div>
-                    <div class="skill-tags">
-                        <span class="s-tag">Scikit-learn</span>
-                        <span class="s-tag">Transformers</span>
-                        <span class="s-tag">XGBoost</span>
-                        <span class="s-tag">OpenCV</span>
-                    </div>
-                </div>
-                <div class="skill-card from-bottom d3">
-                    <div class="skill-icon">
-                        <svg fill="none" height="22" viewbox="0 0 24 24" width="22">
-                            <path d="M5 12H3l9-9 9 9h-2" stroke="#1e5fc2" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="1.8"></path>
-                            <path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" stroke="#1e5fc2" stroke-linecap="round"
-                                stroke-width="1.8"></path>
-                        </svg>
-                    </div>
-                    <div class="skill-name">Backend Development</div>
-                    <div class="skill-desc">Creating robust, scalable backend architectures with secure APIs,
-                        microservices, and efficient data pipelines for 10,000+ document daily throughput.</div>
-                    <div class="skill-tags">
-                        <span class="s-tag">Node.js</span>
-                        <span class="s-tag">FastAPI</span>
-                        <span class="s-tag">MongoDB</span>
-                        <span class="s-tag">PostgreSQL</span>
+                    <div class="skill-reveal from-bottom d3">
+                        <div class="skill-card-animate">
+                            <div class="skill-card">
+                                <div class="skill-img"><img src="https://images.unsplash.com/photo-1623282033815-40b05d96c903?w=500&q=80" alt="Backend"></div>
+                                <div class="skill-name">Backend Development</div>
+                                <div class="skill-desc">Creating robust, scalable backend architectures with secure APIs.</div>
+                                <div class="skill-tags">
+                                    <span class="s-tag">Node.js</span><span class="s-tag">FastAPI</span><span class="s-tag">MongoDB</span><span class="s-tag">PostgreSQL</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="skill-card from-bottom d4">
-                    <div class="skill-icon">
-                        <svg fill="none" height="22" viewbox="0 0 24 24" width="22">
-                            <polyline points="16 18 22 12 16 6" stroke="#1e5fc2" stroke-linecap="round"
-                                stroke-linejoin="round" stroke-width="1.8"></polyline>
-                            <polyline points="8 6 2 12 8 18" stroke="#1e5fc2" stroke-linecap="round"
-                                stroke-linejoin="round" stroke-width="1.8"></polyline>
-                        </svg>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="hanging-line-wrap">
+                <div class="hanging-line"></div>
+                <div class="skills-grid">
+                    <div class="skill-reveal from-bottom d4">
+                        <div class="skill-card-animate">
+                            <div class="skill-card">
+                                <div class="skill-img"><img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=500&q=80" alt="Frontend"></div>
+                                <div class="skill-name">Frontend Development</div>
+                                <div class="skill-desc">Building modern, responsive, and high-performance user interfaces.</div>
+                                <div class="skill-tags">
+                                    <span class="s-tag">React</span><span class="s-tag">Next.js</span><span class="s-tag">Electron</span><span class="s-tag">Tailwind CSS</span><span class="s-tag">TypeScript</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="skill-name">Frontend Development</div>
-                    <div class="skill-desc">Building modern, responsive, and high-performance user interfaces with the
-                        latest frontend frameworks and state management solutions.</div>
-                    <div class="skill-tags">
-                        <span class="s-tag">React</span>
-                        <span class="s-tag">Next.js</span>
-                        <span class="s-tag">Electron</span>
-                        <span class="s-tag">Tailwind CSS</span>
-                        <span class="s-tag">TypeScript</span>
+                    <div class="skill-reveal from-bottom d5">
+                        <div class="skill-card-animate">
+                            <div class="skill-card">
+                                <div class="skill-img"><img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=500&q=80" alt="Automation"></div>
+                                <div class="skill-name">Workflow Automation</div>
+                                <div class="skill-desc">Designing intelligent automation systems using n8n and API orchestration.</div>
+                                <div class="skill-tags">
+                                    <span class="s-tag">n8n</span><span class="s-tag">Webhooks</span><span class="s-tag">Playwright</span><span class="s-tag">REST APIs</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="skill-card from-bottom d5">
-                    <div class="skill-icon">
-                        <svg fill="none" height="22" viewbox="0 0 24 24" width="22">
-                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="#1e5fc2" stroke-linecap="round"
-                                stroke-linejoin="round" stroke-width="1.8"></path>
-                        </svg>
-                    </div>
-                    <div class="skill-name">Workflow Automation</div>
-                    <div class="skill-desc">Designing intelligent automation systems using n8n, event-driven
-                        architectures, and API orchestration — reducing manual operations by 60%.</div>
-                    <div class="skill-tags">
-                        <span class="s-tag">n8n</span>
-                        <span class="s-tag">Webhooks</span>
-                        <span class="s-tag">Playwright</span>
-                        <span class="s-tag">REST APIs</span>
-                    </div>
-                </div>
-                <div class="skill-card from-bottom d6">
-                    <div class="skill-icon">
-                        <svg fill="none" height="22" viewbox="0 0 24 24" width="22">
-                            <path d="M18 20V10M12 20V4M6 20v-6" stroke="#1e5fc2" stroke-linecap="round"
-                                stroke-linejoin="round" stroke-width="1.8"></path>
-                        </svg>
-                    </div>
-                    <div class="skill-name">Cloud &amp; DevOps</div>
-                    <div class="skill-desc">Deploying and managing scalable cloud infrastructure with modern DevOps
-                        practices, container orchestration, and performance monitoring achieving 99.9% uptime.</div>
-                    <div class="skill-tags">
-                        <span class="s-tag">Docker</span>
-                        <span class="s-tag">AWS</span>
-                        <span class="s-tag">Azure</span>
-                        <span class="s-tag">CI/CD</span>
+                    <div class="skill-reveal from-bottom d6">
+                        <div class="skill-card-animate">
+                            <div class="skill-card">
+                                <div class="skill-img"><img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=500&q=80" alt="DevOps"></div>
+                                <div class="skill-name">Cloud & DevOps</div>
+                                <div class="skill-desc">Deploying and managing scalable cloud infrastructure with modern DevOps practices.</div>
+                                <div class="skill-tags">
+                                    <span class="s-tag">Docker</span><span class="s-tag">AWS</span><span class="s-tag">Azure</span><span class="s-tag">CI/CD</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
