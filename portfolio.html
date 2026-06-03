@@ -2535,13 +2535,14 @@
            All 6 cards revolve on one ellipse.
            JS drives it. CSS just styles cards.
         ══════════════════════════════════════ */
-		#skills-carousel-wrap {
-			position: relative;
-			width: 100%;
-			height: 460px;
-			overflow: visible;
-			margin-top: 60px;   /* pushes wrap down so front card has room above */
-		}
+        #skills-carousel-wrap {
+            position: relative;
+            width: 100%;
+            height: 460px;
+            overflow: visible;
+            margin-top: 60px;
+            /* pushes wrap down so front card has room above */
+        }
 
         .carousel-stage {
             position: relative;
@@ -2556,7 +2557,7 @@
             border-radius: 8px;
             padding: 12px 12px 18px 12px;
             border: 1px solid #ddd;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
             /* no background transition = no black flicker */
@@ -2566,7 +2567,7 @@
         }
 
         .c-card:hover {
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
         }
 
         .c-card-img {
@@ -2628,6 +2629,7 @@
                 height: auto;
                 overflow: visible;
             }
+
             .carousel-stage {
                 display: flex;
                 flex-direction: column;
@@ -2636,6 +2638,7 @@
                 height: auto;
                 position: relative;
             }
+
             .c-card {
                 position: relative !important;
                 left: auto !important;
@@ -2763,7 +2766,283 @@
             }
 
         }
+
+        /* ───── FLOATING CHATBOT ───── */
+        #chatbot-trigger {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--grad);
+            box-shadow: 0 10px 30px rgba(30, 95, 194, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 9999;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        #chatbot-trigger:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 35px rgba(30, 95, 194, 0.6);
+        }
+        #chatbot-trigger svg { width: 28px; height: 28px; transition: transform 0.3s ease; }
+        #chatbot-trigger.active svg { transform: rotate(90deg); }
+
+        #chatbot-panel {
+            position: fixed;
+            bottom: 105px;
+            right: 30px;
+            width: 380px;
+            height: 580px;
+            max-height: calc(100vh - 140px);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.14), 0 8px 20px rgba(26, 60, 110, 0.07);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 9998;
+            opacity: 0;
+            transform: translateY(24px) scale(0.96);
+            pointer-events: none;
+            transition: all 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #chatbot-panel.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: all;
+        }
+
+        .chat-header {
+            padding: 13px 16px;
+            background: linear-gradient(135deg, #1a3c6e 0%, #1e5fc2 55%, #2d7ef0 100%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .chat-header-info { display: flex; align-items: center; gap: 10px; }
+        .chat-bot-avatar {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: rgba(255,255,255,0.18);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 12px;
+            border: 1.5px solid rgba(255,255,255,0.35);
+        }
+        .chat-header-title { font-weight: 700; font-size: 14px; letter-spacing: -0.1px; }
+        .chat-header-subtitle { font-size: 10.5px; color: rgba(255,255,255,0.6); margin-top: 1px; }
+        .chat-header-actions { display: flex; align-items: center; gap: 12px; }
+        .chat-btn-icon {
+            background: transparent; border: none; color: rgba(255, 255, 255, 0.85);
+            cursor: pointer; width: 30px; height: 30px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        }
+        .chat-btn-icon:hover { background: rgba(255,255,255,0.14); color: #fff; }
+        .chat-btn-icon svg { width: 15px; height: 15px; }
+        .chat-btn-icon.active { color: var(--teal); }
+        .chat-btn-icon.active:hover { background: rgba(0, 180, 216, 0.15); }
+
+        .chat-messages {
+            flex: 1; padding: 14px 14px 10px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 10px;
+            background: #f6f9fd; scroll-behavior: smooth;
+        }
+        .chat-messages::-webkit-scrollbar { width: 3px; }
+        .chat-messages::-webkit-scrollbar-track { background: transparent; }
+        .chat-messages::-webkit-scrollbar-thumb { background: #c8d6ec; border-radius: 3px; }
+
+        .msg-bubble {
+            max-width: 90%; padding: 10px 14px; font-size: 13.5px;
+            line-height: 1.56; word-wrap: break-word;
+        }
+        .msg-bot {
+            align-self: flex-start;
+            background: #ffffff;
+            color: #1a1a2e;
+            border-radius: 4px 16px 16px 16px;
+            border: 1px solid #e2eaf7;
+            box-shadow: 0 2px 8px rgba(26,60,110,0.05);
+        }
+        .msg-bot p { margin: 0 0 8px; }
+        .msg-bot p:last-child { margin-bottom: 0; }
+        .msg-bot ul, .msg-bot ol {
+            margin: 6px 0 8px 20px !important;
+            padding: 0 !important;
+            list-style-position: outside !important;
+        }
+        .msg-bot ul {
+            list-style-type: disc !important;
+        }
+        .msg-bot ol {
+            list-style-type: decimal !important;
+        }
+        .msg-bot li {
+            margin-bottom: 6px;
+            padding-left: 2px;
+            line-height: 1.5;
+            display: list-item !important;
+        }
+        .msg-bot li:last-child {
+            margin-bottom: 0;
+        }
+        .msg-bot strong { color: #1e5fc2; font-weight: 600; }
+        .msg-user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #1e5fc2, #2d7ef0);
+            color: #fff;
+            border-radius: 16px 4px 16px 16px;
+            box-shadow: 0 3px 10px rgba(30,95,194,0.25);
+        }
+
+        .typing-indicator {
+            display: flex; align-items: center; gap: 5px;
+            padding: 11px 14px; border-radius: 4px 14px 14px 14px;
+            background: #fff; border: 1px solid #e2eaf7;
+            align-self: flex-start;
+            box-shadow: 0 2px 8px rgba(26,60,110,0.05);
+            width: fit-content;
+        }
+        .typing-dot {
+            width: 6px; height: 6px; background: #b8c9e0;
+            border-radius: 50%; opacity: 0.7;
+            animation: typingBounce 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+            40% { transform: scale(1.15); opacity: 1; }
+        }
+
+        /* Quick Menu Popup — hidden by default */
+        .chat-menu-popup {
+            display: none;
+            padding: 12px 14px 14px;
+            background: #fff;
+            border-top: 1px solid #e8eef8;
+            flex-shrink: 0;
+            animation: menuSlideUp 0.18s ease;
+        }
+        .chat-menu-popup.open { display: block; }
+        @keyframes menuSlideUp {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .chat-menu-popup-title {
+            font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+            color: #9aabcc; font-weight: 700; margin-bottom: 9px;
+        }
+        .chat-menu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+        .chat-menu-btn {
+            background: #eef4ff;
+            border: 1px solid #cfdaf7;
+            color: #1e5fc2;
+            padding: 7px 4px;
+            border-radius: 8px;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.18s;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: inherit;
+        }
+        .chat-menu-btn:hover {
+            background: linear-gradient(135deg, #1e5fc2, #2d7ef0);
+            color: #fff; border-color: transparent;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(30,95,194,0.25);
+        }
+
+        .chat-footer {
+            padding: 10px 12px;
+            background: #ffffff;
+            border-top: 1px solid #e8eef8;
+            display: flex; align-items: center; gap: 7px;
+            flex-shrink: 0;
+        }
+        .chat-footer-menu-btn {
+            background: transparent; border: none;
+            color: #a0b2cc; cursor: pointer;
+            width: 32px; height: 32px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.18s; flex-shrink: 0;
+        }
+        .chat-footer-menu-btn:hover, .chat-footer-menu-btn.menu-open {
+            background: #eef4ff; color: #1e5fc2;
+        }
+        .chat-footer-menu-btn svg { width: 17px; height: 17px; }
+        .chat-input-wrapper {
+            flex: 1; display: flex; align-items: center;
+            background: #f2f6fc; border: 1.5px solid #dce7f5;
+            border-radius: 22px; padding: 2px 4px 2px 13px;
+            transition: all 0.25s;
+        }
+        .chat-input-wrapper:focus-within {
+            border-color: #2d7ef0; background: #fff;
+            box-shadow: 0 0 0 3px rgba(45,126,240,0.12);
+        }
+        .chat-input {
+            flex: 1; border: none; outline: none;
+            padding: 8px 0; font-size: 13.5px;
+            color: #1a1a2e; background: transparent; font-family: inherit;
+        }
+        .chat-input::placeholder { color: #aabace; }
+        .chat-btn-voice {
+            background: transparent; border: none; color: #a0b2cc;
+            cursor: pointer; width: 30px; height: 30px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.18s; flex-shrink: 0;
+        }
+        .chat-btn-voice:hover { color: #1e5fc2; background: #eef4ff; }
+        .chat-btn-voice.recording {
+            color: #ff4757; background: rgba(255,71,87,0.1);
+            animation: pulseRed 1.2s infinite;
+        }
+        @keyframes pulseRed {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255,71,87,0); }
+            50% { box-shadow: 0 0 0 5px rgba(255,71,87,0.15); }
+        }
+        .chat-btn-voice svg { width: 15px; height: 15px; }
+        .chat-btn-send {
+            background: linear-gradient(135deg, #1e5fc2, #2d7ef0);
+            border: none; color: #fff; cursor: pointer;
+            width: 34px; height: 34px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 3px 10px rgba(30,95,194,0.3);
+            flex-shrink: 0;
+        }
+        .chat-btn-send:hover { transform: scale(1.08); box-shadow: 0 5px 14px rgba(30,95,194,0.4); }
+        .chat-btn-send svg { width: 14px; height: 14px; transform: translateX(1px); }
+
+        @media (max-width: 480px) {
+            #chatbot-panel {
+                bottom: 76px; right: 12px; left: 12px;
+                width: auto; height: 520px;
+                max-height: calc(100vh - 108px);
+            }
+            #chatbot-trigger { bottom: 14px; right: 14px; width: 50px; height: 50px; }
+            .chat-menu-grid { grid-template-columns: repeat(2, 1fr); }
+        }
     </style>
+
 </head>
 
 <body>
@@ -2833,7 +3112,7 @@
                         <div class="hero-stat-label">CGPA out of 10</div>
                     </div>
                     <div class="hero-stat">
-                        <div class="hero-stat-num">25<sup>+</sup></div>
+                        <div class="hero-stat-num">35<sup>+</sup></div>
                         <div class="hero-stat-label">Projects Completed</div>
                     </div>
                     <div class="hero-stat">
@@ -2881,7 +3160,7 @@
                     <p class="sec-sub"
                         style="font-size: 16px; line-height: 1.8; margin-bottom: 24px; color: var(--text);">
                         With a strong academic background (9.22 CGPA) in Information Science & Engineering from Sri
-                        Venkateshwara College of Engineering, I've completed over 25+ projects spanning AI, full-stack
+                        Venkateshwara College of Engineering, I've completed over 35+ projects spanning AI, full-stack
                         development, and automation systems. My work focuses on creating scalable AI pipelines that
                         combine cutting-edge technology with practical business solutions.
                     </p>
@@ -2973,9 +3252,11 @@
             <div class="skills-header"
                 style="text-align:center; margin-bottom: 48px; display: flex; flex-direction: column; align-items: center;">
                 <div class="from-bottom" style="display: flex; flex-direction: column; align-items: center;">
-                    <div class="sec-tag" style="background: rgba(255,255,255,0.1); color: #fff;">Technical Expertise</div>
+                    <div class="sec-tag" style="background: rgba(255,255,255,0.1); color: #fff;">Technical Expertise
+                    </div>
                     <h2 class="sec-h2" style="color:#fff;">What I <em>Specialize In</em></h2>
-                    <p class="sec-sub" style="color: rgba(255,255,255,0.7);">Specialized skills developed with precision, delivered with passion.</p>
+                    <p class="sec-sub" style="color: rgba(255,255,255,0.7);">Specialized skills developed with
+                        precision, delivered with passion.</p>
                 </div>
             </div>
 
@@ -2984,45 +3265,72 @@
                 <div class="carousel-stage" id="carousel-stage">
 
                     <div class="c-card" data-index="0">
-                        <div class="c-card-img"><img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=500&q=80" alt="AI"></div>
+                        <div class="c-card-img"><img
+                                src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=500&q=80" alt="AI">
+                        </div>
                         <div class="c-card-name">Generative AI & LLM</div>
-                        <div class="c-card-desc">Building intelligent systems powered by large language models and RAG architectures.</div>
-                        <div class="c-card-tags"><span class="c-tag">LLM Workflows</span><span class="c-tag">RAG Systems</span><span class="c-tag">Embeddings</span><span class="c-tag">Prompt Engineering</span></div>
+                        <div class="c-card-desc">Building intelligent systems powered by large language models and RAG
+                            architectures.</div>
+                        <div class="c-card-tags"><span class="c-tag">LLM Workflows</span><span class="c-tag">RAG
+                                Systems</span><span class="c-tag">Embeddings</span><span class="c-tag">Prompt
+                                Engineering</span></div>
                     </div>
 
                     <div class="c-card" data-index="1">
-                        <div class="c-card-img"><img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=500&q=80" alt="ML"></div>
+                        <div class="c-card-img"><img
+                                src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=500&q=80" alt="ML">
+                        </div>
                         <div class="c-card-name">Machine Learning & NLP</div>
-                        <div class="c-card-desc">Developing intelligent ML models for classification and natural language processing.</div>
-                        <div class="c-card-tags"><span class="c-tag">Scikit-learn</span><span class="c-tag">Transformers</span><span class="c-tag">XGBoost</span><span class="c-tag">OpenCV</span></div>
+                        <div class="c-card-desc">Developing intelligent ML models for classification and natural
+                            language processing.</div>
+                        <div class="c-card-tags"><span class="c-tag">Scikit-learn</span><span
+                                class="c-tag">Transformers</span><span class="c-tag">XGBoost</span><span
+                                class="c-tag">OpenCV</span></div>
                     </div>
 
                     <div class="c-card" data-index="2">
-                        <div class="c-card-img"><img src="https://images.unsplash.com/photo-1623282033815-40b05d96c903?w=500&q=80" alt="Backend"></div>
+                        <div class="c-card-img"><img
+                                src="https://images.unsplash.com/photo-1623282033815-40b05d96c903?w=500&q=80"
+                                alt="Backend"></div>
                         <div class="c-card-name">Backend Development</div>
                         <div class="c-card-desc">Creating robust, scalable backend architectures with secure APIs.</div>
-                        <div class="c-card-tags"><span class="c-tag">Node.js</span><span class="c-tag">FastAPI</span><span class="c-tag">MongoDB</span><span class="c-tag">PostgreSQL</span></div>
+                        <div class="c-card-tags"><span class="c-tag">Node.js</span><span
+                                class="c-tag">FastAPI</span><span class="c-tag">MongoDB</span><span
+                                class="c-tag">PostgreSQL</span></div>
                     </div>
 
                     <div class="c-card" data-index="3">
-                        <div class="c-card-img"><img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=500&q=80" alt="Frontend"></div>
+                        <div class="c-card-img"><img
+                                src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=500&q=80"
+                                alt="Frontend"></div>
                         <div class="c-card-name">Frontend Development</div>
-                        <div class="c-card-desc">Building modern, responsive, and high-performance user interfaces.</div>
-                        <div class="c-card-tags"><span class="c-tag">React</span><span class="c-tag">Next.js</span><span class="c-tag">Electron</span><span class="c-tag">Tailwind</span><span class="c-tag">TypeScript</span></div>
+                        <div class="c-card-desc">Building modern, responsive, and high-performance user interfaces.
+                        </div>
+                        <div class="c-card-tags"><span class="c-tag">React</span><span class="c-tag">Next.js</span><span
+                                class="c-tag">Electron</span><span class="c-tag">Tailwind</span><span
+                                class="c-tag">TypeScript</span></div>
                     </div>
 
                     <div class="c-card" data-index="4">
-                        <div class="c-card-img"><img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=500&q=80" alt="Automation"></div>
+                        <div class="c-card-img"><img
+                                src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=500&q=80"
+                                alt="Automation"></div>
                         <div class="c-card-name">Workflow Automation</div>
-                        <div class="c-card-desc">Designing intelligent automation systems using n8n and API orchestration.</div>
-                        <div class="c-card-tags"><span class="c-tag">n8n</span><span class="c-tag">Webhooks</span><span class="c-tag">Playwright</span><span class="c-tag">REST APIs</span></div>
+                        <div class="c-card-desc">Designing intelligent automation systems using n8n and API
+                            orchestration.</div>
+                        <div class="c-card-tags"><span class="c-tag">n8n</span><span class="c-tag">Webhooks</span><span
+                                class="c-tag">Playwright</span><span class="c-tag">REST APIs</span></div>
                     </div>
 
                     <div class="c-card" data-index="5">
-                        <div class="c-card-img"><img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=500&q=80" alt="DevOps"></div>
+                        <div class="c-card-img"><img
+                                src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=500&q=80"
+                                alt="DevOps"></div>
                         <div class="c-card-name">Cloud & DevOps</div>
-                        <div class="c-card-desc">Deploying and managing scalable cloud infrastructure with modern DevOps practices.</div>
-                        <div class="c-card-tags"><span class="c-tag">Docker</span><span class="c-tag">AWS</span><span class="c-tag">Azure</span><span class="c-tag">CI/CD</span></div>
+                        <div class="c-card-desc">Deploying and managing scalable cloud infrastructure with modern DevOps
+                            practices.</div>
+                        <div class="c-card-tags"><span class="c-tag">Docker</span><span class="c-tag">AWS</span><span
+                                class="c-tag">Azure</span><span class="c-tag">CI/CD</span></div>
                     </div>
 
                 </div>
@@ -3352,7 +3660,7 @@
                     <div class="stat-label">CGPA out of 10</div>
                 </div>
                 <div class="stat-cell">
-                    <div class="stat-num" data-suffix="+" data-target="25">25+</div>
+                    <div class="stat-num" data-suffix="+" data-target="35">35+</div>
                     <div class="stat-label">Projects Completed</div>
                 </div>
                 <div class="stat-cell">
@@ -4053,33 +4361,33 @@
         }
 
         /* ── Skills Ellipse Carousel ── */
-        (function() {
+        (function () {
             function run() {
-                var wrap  = document.getElementById('skills-carousel-wrap');
+                var wrap = document.getElementById('skills-carousel-wrap');
                 var stage = document.getElementById('carousel-stage');
                 if (!wrap || !stage) return;
 
                 var cards = Array.from(stage.querySelectorAll('.c-card'));
-                var n     = cards.length;           // 6
+                var n = cards.length;           // 6
                 var CARD_W = 300;
                 var CARD_H = 380;                   // approximate rendered height
 
                 /* Ellipse radii — keep cards well inside the stage */
                 var RX = 0;   /* set after we know wrap width */
 
-                var angle  = 0;           /* master angle, radians */
-                var SPEED  = 0.008;       /* radians per frame  ≈ full orbit ~13s */
+                var angle = 0;           /* master angle, radians */
+                var SPEED = 0.008;       /* radians per frame  ≈ full orbit ~13s */
                 var paused = false;
 
-                wrap.addEventListener('mouseenter', function(){ paused = true;  });
-                wrap.addEventListener('mouseleave', function(){ paused = false; });
+                wrap.addEventListener('mouseenter', function () { paused = true; });
+                wrap.addEventListener('mouseleave', function () { paused = false; });
 
                 function frame() {
                     /* recalc RX every frame so it adapts to window resize */
                     RX = (wrap.offsetWidth - CARD_W) / 2 - 120;  /* tighten horizontal spread */
-					var RY = 90;
-                    var cx = wrap.offsetWidth  / 2;
-                    var cy = wrap.offsetHeight / 2 + 40; 
+                    var RY = 90;
+                    var cx = wrap.offsetWidth / 2;
+                    var cy = wrap.offsetHeight / 2 + 40;
 
                     if (!paused) {
                         angle += SPEED;
@@ -4087,20 +4395,20 @@
                     }
 
                     /* sort by depth so front cards paint on top */
-                    var order = cards.map(function(card, i) {
+                    var order = cards.map(function (card, i) {
                         var theta = angle + (i / n) * Math.PI * 2;
-                        var cosT  = Math.cos(theta);   /* +1 = front, -1 = back */
+                        var cosT = Math.cos(theta);   /* +1 = front, -1 = back */
                         return { card: card, theta: theta, cosT: cosT };
                     });
-                    order.sort(function(a, b){ return a.cosT - b.cosT; });   /* back first */
+                    order.sort(function (a, b) { return a.cosT - b.cosT; });   /* back first */
 
-                    order.forEach(function(item, rank) {
-                        var sinT  = Math.sin(item.theta);
-                        var cosT  = item.cosT;
+                    order.forEach(function (item, rank) {
+                        var sinT = Math.sin(item.theta);
+                        var cosT = item.cosT;
 
                         /* Position along ellipse */
                         var x = cx + sinT * RX - CARD_W / 2;
-                        var y = cy - cosT * RY  - CARD_H / 2;
+                        var y = cy - cosT * RY - CARD_H / 2;
 
                         /* Scale: 0.55 (back) → 1.0 (front) */
                         var scale = 0.55 + (cosT + 1) * 0.225;
@@ -4108,9 +4416,9 @@
                         /* Opacity: 0.25 (back) → 1.0 (front) */
                         var opacity = 0.25 + (cosT + 1) * 0.375;
 
-                        item.card.style.left    = x + 'px';
-                        item.card.style.top     = y + 'px';
-                        item.card.style.zIndex  = rank;
+                        item.card.style.left = x + 'px';
+                        item.card.style.top = y + 'px';
+                        item.card.style.zIndex = rank;
                         item.card.style.opacity = opacity;
                         item.card.style.transform = 'scale(' + scale + ')';
                         item.card.style.transformOrigin = 'center center';
@@ -4305,6 +4613,496 @@
             menuToggle.classList.toggle('active');
         }
     </script>
-</body>
 
+    <!-- ───── CHATBOT UI ───── -->
+    <div id="chatbot-trigger" onclick="toggleChatbot()" title="Chat with Poorna's Assistant">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+    </div>
+
+    <div id="chatbot-panel">
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <div class="chat-bot-avatar">AI</div>
+                <div>
+                    <div class="chat-header-title">Poorna Portfolio Assistant</div>
+                    <div class="chat-header-subtitle">Powered by AI &nbsp;✦</div>
+                </div>
+            </div>
+            <div class="chat-header-actions">
+                <button class="chat-btn-icon" id="chat-mute-btn" onclick="toggleMute()" title="Unmute Voice">
+                    <svg id="volume-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                    </svg>
+                </button>
+                <button class="chat-btn-icon" onclick="startNewConversation()" title="New Conversation">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                    </svg>
+                </button>
+                <button class="chat-btn-icon" onclick="toggleChatbot()" title="Close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <!-- Quick Menu Popup — toggled by footer grid button only -->
+        <div class="chat-menu-popup" id="chat-menu-popup">
+            <div class="chat-menu-popup-title">Explore Portfolio</div>
+            <div class="chat-menu-grid">
+                <button class="chat-menu-btn" onclick="handleMenuClick('About')">About</button>
+                <button class="chat-menu-btn" onclick="handleMenuClick('Expertise')">Expertise</button>
+                <button class="chat-menu-btn" onclick="handleMenuClick('Projects')">Projects</button>
+                <button class="chat-menu-btn" onclick="handleMenuClick('Experience')">Experience</button>
+                <button class="chat-menu-btn" onclick="handleMenuClick('Achievements')">Achievements</button>
+                <button class="chat-menu-btn" onclick="handleMenuClick('Certifications')">Certs</button>
+                <button class="chat-menu-btn" onclick="handleMenuClick('Use Cases')">Use Cases</button>
+                <button class="chat-menu-btn" onclick="handleMenuClick('Contact')">Contact</button>
+            </div>
+        </div>
+        <div class="chat-footer">
+            <button class="chat-footer-menu-btn" id="chat-menu-toggle" onclick="toggleChatMenu()" title="Explore sections">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                    <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                    <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+                    <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+                </svg>
+            </button>
+            <div class="chat-input-wrapper">
+                <input type="text" id="chat-user-input" class="chat-input" placeholder="Ask me about Poorna..." onkeydown="handleInputKeydown(event)">
+                <button class="chat-btn-voice" id="chat-mic-btn" onclick="toggleVoiceInput()" title="Voice Input">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
+                </button>
+            </div>
+            <button class="chat-btn-send" onclick="sendUserMessage()" title="Send">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- ───── CHATBOT LOGIC ───── -->
+    <script>
+        const portfolioData = {
+            about: "Poorna Seshaseyan is a Generative AI Developer based in Bengaluru with a passion for building intelligent systems. Currently working as a Software Developer Intern at eMudhra Ltd, specializing in RAG systems, LLMs, NLP, and intelligent automation. He holds a B.E. in Information Science & Engineering from Sri Venkateshwara College of Engineering with a 9.22 CGPA.",
+            skills: "Poorna has expertise across several key areas:\n\n**Generative AI & LLMs**: RAG systems, Prompt Engineering, LangChain, and Embeddings.\n\n**ML & NLP**: Scikit-learn, Transformers, XGBoost, OpenCV, and Multilingual NLP supporting 15+ languages.\n\n**Workflow Automation**: n8n, Webhooks, Playwright, and REST APIs (cutting manual operations by 60% at eMudhra).\n\n**Full-Stack Development**: React, Next.js, Node.js, FastAPI, Electron, and TypeScript.\n\n**Databases & Cloud**: MongoDB, PostgreSQL, Docker, AWS, and Azure CI/CD pipelines.",
+            projects: "Here are Poorna's major projects:\n\n**Workflow Test Generator**: Enterprise app at eMudhra generating automated Playwright test scripts from workflow definitions.\n\n**L1 Support Automation**: Intelligent n8n pipelines cutting manual operations by 60% via AI ticket routing.\n\n**ConnectBook**: Full-stack academic management system with AI-driven performance analytics.\n\n**Plant Disease Detection**: ML system achieving 94% classification accuracy across 15+ crop diseases.\n\n**RideWithUs**: Award-winning ride-sharing platform that won 2nd place at HackSpark.\n\n**Cafe Billing App**: Production-grade freelance billing app with real-time order tracking and analytics.",
+            experience: "Here is a summary of Poorna's professional experience:\n\n**Software Developer Intern at eMudhra Ltd, Bengaluru (2025–Present)**: Developed the Workflow Test Generator application, built AI-powered L1 support automation pipelines using n8n, created multilingual NLP systems supporting 15+ languages, and designed high-uptime event-driven microservices.\n\n**B.E. in Information Science & Engineering (2022–2026)**: Sri Venkateshwara College of Engineering, Bengaluru. Maintained a 9.22 CGPA and ranked in the top 5% of the class.",
+            achievements: "Poorna's major achievements and honors:\n\n**IDEATHON-2025**: Secured Runner-Up at SVCE for Smart Civil Engineering Solutions.\n\n**HackSpark**: Won 2nd Place for the RideWithUs geospatial platform.\n\n**Innovation Pitching Event**: Awarded 1st Place.\n\n**Smart India Hackathon**: Finalist and active hackathon participant.",
+            certifications: "Poorna has earned 15+ professional certifications in AI, Machine Learning, Deep Learning, and Cloud Technologies, validating strong skills and continuous learning.",
+            usecases: "Poorna's key impact areas include:\n\n**AI Automation**: Event-driven n8n pipelines that cut L1 support manual effort by 60%.\n\n**NLP Systems**: Multilingual document parsers that handle 10,000+ docs daily.\n\n**Full Stack Engineering**: End-to-end web applications built using React, Node.js, and FastAPI.\n\n**ML Pipelines**: Robust data prep and model serving pipelines, such as the 94% accuracy plant disease detection system.",
+            education: "B.E. in Information Science & Engineering (2022–2026) at Sri Venkateshwara College of Engineering, Bengaluru. CGPA: 9.22 / 10 — consistently in the top 5% of the class.",
+            contact: "You can reach out to Poorna through these channels:\n\n**Email**: poornaseshaseyanaraja@gmail.com\n\n**Phone**: +91 6364037478\n\n**Location**: Bengaluru, Karnataka, India\n\n**LinkedIn**: linkedin.com/in/a-poorna-seshaseyan-2209b4262\n\n**GitHub**: github.com/Saipoo"
+        };
+
+        // ── State ──
+        let isTyping = false;
+        let isMuted = true;
+        let greetingRead = false;
+        let chatMenuOpen = false;
+        let recognition = null;
+        let isRecording = false;
+
+        const greetingText = `Hi! 👋
+
+I'm Poorna's Portfolio Assistant.
+
+You can ask me about Poorna's background, core skills, projects, work experience, certifications, education, or contact details.
+
+Or tap the grid icon below to explore different sections of his portfolio directly.`;
+
+        // Preload TTS voices
+        if (window.speechSynthesis) window.speechSynthesis.getVoices();
+
+        // ── Toggle panel open/close ──
+        function toggleChatbot() {
+            const trigger = document.getElementById('chatbot-trigger');
+            const panel = document.getElementById('chatbot-panel');
+            const opened = panel.classList.toggle('active');
+            trigger.classList.toggle('active');
+            if (opened) {
+                const mc = document.getElementById('chat-messages');
+                if (!mc.children.length) showInitialGreeting();
+            } else {
+                window.speechSynthesis.cancel();
+                if (isRecording && recognition) recognition.stop();
+                closeChatMenu();
+            }
+        }
+
+        // ── Greeting (no TTS) ──
+        function showInitialGreeting() {
+            const mc = document.getElementById('chat-messages');
+            mc.innerHTML = '';
+            // Create hidden typing indicator
+            const ind = document.createElement('div');
+            ind.className = 'typing-indicator';
+            ind.id = 'chat-typing-indicator';
+            ind.style.display = 'none';
+            ind.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+            mc.appendChild(ind);
+            addBotMessage(greetingText, false); // false = skip TTS for greeting
+        }
+
+        // ── Markdown → Clean HTML ──
+        function markdownToHtml(text) {
+            const lines = text.split('\n');
+            const parts = [];
+            let listType = null;
+            let listItems = [];
+
+            function flushList() {
+                if (!listItems.length) return;
+                const tag = listType === 'ol' ? 'ol' : 'ul';
+                parts.push('<' + tag + '>' + listItems.map(function(x){ return '<li>' + x + '</li>'; }).join('') + '</' + tag + '>');
+                listItems = []; listType = null;
+            }
+
+            for (let i = 0; i < lines.length; i++) {
+                const lineRaw = lines[i];
+                const lineTrimmed = lineRaw.trim();
+                
+                if (!lineTrimmed) {
+                    flushList();
+                    continue;
+                }
+
+                // Bold
+                let line = lineTrimmed.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+                // Numbered list: 1. 2. 3.
+                if (/^\d+\.\s+/.test(line)) {
+                    if (listType !== 'ol') { flushList(); listType = 'ol'; }
+                    listItems.push(line.replace(/^\d+\.\s+/, '').trim());
+                }
+                // Bullet: •  -  *
+                else if (/^[•\-\*]\s+/.test(line)) {
+                    if (listType !== 'ul') { flushList(); listType = 'ul'; }
+                    listItems.push(line.replace(/^[•\-\*]\s+/, '').trim());
+                }
+                // Indented sub-item
+                else if (/^\s+([-•\*])\s+/.test(lineRaw)) {
+                    if (listType !== 'ul') { flushList(); listType = 'ul'; }
+                    listItems.push(lineRaw.replace(/^\s+[-•\*]\s+/, '').trim());
+                }
+                // Normal paragraph text
+                else {
+                    flushList();
+                    parts.push('<p>' + line + '</p>');
+                }
+            }
+            flushList();
+            return parts.join('');
+        }
+
+        // ── Tokenize rendered HTML for typing animation ──
+        function tokenizeHtml(html) {
+            return html.match(/(<[^>]+>|[^<>\s]+|\s+)/g) || [];
+        }
+
+        // ── Append bot message with streaming animation + optional TTS ──
+        function addBotMessage(text, speakIt) {
+            const mc = document.getElementById('chat-messages');
+            const bubble = document.createElement('div');
+            bubble.classList.add('msg-bubble', 'msg-bot');
+            const ind = document.getElementById('chat-typing-indicator');
+            if (ind) mc.insertBefore(bubble, ind); else mc.appendChild(bubble);
+            mc.scrollTop = mc.scrollHeight;
+
+            return new Promise(function(resolve) {
+                isTyping = true;
+                const html = markdownToHtml(text);
+                const tokens = tokenizeHtml(html);
+                let i = 0;
+
+                // Start TTS concurrently with typing (for non-greeting messages)
+                if (speakIt && !isMuted) {
+                    speakText(text);
+                }
+
+                function typeNext() {
+                    if (i >= tokens.length) { isTyping = false; resolve(); return; }
+                    const tk = tokens[i++];
+                    bubble.innerHTML += tk;
+                    if (tk.startsWith('<') && tk.endsWith('>')) {
+                        typeNext(); // HTML tags: instant, no delay
+                    } else {
+                        mc.scrollTop = mc.scrollHeight;
+                        setTimeout(typeNext, 18);
+                    }
+                }
+                typeNext();
+            });
+        }
+
+        // ── Append user message bubble ──
+        function addUserMessage(text) {
+            const mc = document.getElementById('chat-messages');
+            const bubble = document.createElement('div');
+            bubble.classList.add('msg-bubble', 'msg-user');
+            bubble.textContent = text;
+            const ind = document.getElementById('chat-typing-indicator');
+            if (ind) mc.insertBefore(bubble, ind); else mc.appendChild(bubble);
+            mc.scrollTop = mc.scrollHeight;
+        }
+
+        // ── Show typing indicator ──
+        function showTypingIndicator() {
+            const ind = document.getElementById('chat-typing-indicator');
+            if (!ind) return;
+            const mc = document.getElementById('chat-messages');
+            mc.appendChild(ind);
+            ind.style.display = 'flex';
+            mc.scrollTop = mc.scrollHeight;
+        }
+        function hideTypingIndicator() {
+            const ind = document.getElementById('chat-typing-indicator');
+            if (ind) ind.style.display = 'none';
+        }
+
+        // ── Opinion/analysis keywords — always go to Groq AI ──
+        const GROQ_OPINION = [
+            'good at','great at','best at','strong at','should i hire','hire him','hire poorna',
+            'recommend','strengths','weakness','summarize','describe','how would you','what makes',
+            'why should','opinion','rate ','suitable','fit for','qualified','impressive','capable',
+            'better than','compare','potential','overall','would you say','stands out','unique'
+        ];
+
+        // ── Local answer router (direct section queries only) ──
+        function getLocalAnswer(query) {
+            const q = query.toLowerCase().trim();
+            // Direct greetings check
+            if (/^(hi|hello|hey|greetings|good\s+morning|good\s+afternoon|good\s+evening|yo)\b/i.test(q)) {
+                return "Hello! 👋 I'm Poorna's Assistant. How can I help you today? Feel free to ask about Poorna's skills, experience, projects, or contact details!";
+            }
+            // Opinion/analysis → force Groq
+            if (GROQ_OPINION.some(function(t){ return q.includes(t); })) return null;
+            // Direct section matches using word boundaries
+            if (/\b(contact|phone|email|reach|linkedin|github|location|address)\b/.test(q)) return portfolioData.contact;
+            if (/\b(certificat|certif|credential)\b/.test(q)) return portfolioData.certifications;
+            if (/\b(use case|nlp system|ai automation|ml pipeline)\b/.test(q)) return portfolioData.usecases;
+            if (/\b(achievement|hackathon|hackspark|ideathon|won|award|competition)\b/.test(q)) return portfolioData.achievements;
+            if (/\b(education|college|degree|cgpa|svce|university)\b/.test(q)) return portfolioData.education;
+            if (/\b(experience|intern|emudhra|work history|job|career)\b/.test(q)) return portfolioData.experience;
+            if (/\b(skill|expertise|technology|stack|tools|languages)\b/.test(q)) return portfolioData.skills;
+            // Projects only when NOT paired with opinion words
+            if (/\b(project|built|created|developed|made)\b/.test(q) && !/\b(good|great|best|should)\b/.test(q)) return portfolioData.projects;
+            // About — only very direct "who is" / "tell me about" patterns
+            if (/^(who is|tell me about|introduce|about poorna)\b/.test(q)) return portfolioData.about;
+            return null;
+        }
+
+        // ── Main bot response dispatcher ──
+        async function getBotResponse(query) {
+            const local = getLocalAnswer(query);
+            if (local) return { text: local, source: 'local' };
+            try {
+                const ai = await callGroqAPI(query);
+                return { text: ai, source: 'groq' };
+            } catch(e) {
+                console.warn('Groq fallback:', e.message);
+                return { text: "Based on Poorna's portfolio, he has strong expertise in Generative AI, NLP, automation tools, full-stack development, and machine learning — making him a great fit for AI-focused developer roles.", source: 'fallback' };
+            }
+        }
+
+        // ── Menu button click ──
+        function handleMenuClick(item) {
+            if (isTyping) return;
+            closeChatMenu();
+            addUserMessage(item);
+            showTypingIndicator();
+            const map = {
+                'About': portfolioData.about, 'Expertise': portfolioData.skills,
+                'Projects': portfolioData.projects, 'Experience': portfolioData.experience,
+                'Achievements': portfolioData.achievements, 'Certifications': portfolioData.certifications,
+                'Use Cases': portfolioData.usecases, 'Contact': portfolioData.contact
+            };
+            setTimeout(function() {
+                hideTypingIndicator();
+                addBotMessage(map[item] || portfolioData.about, true);
+            }, 500);
+        }
+
+        // ── Send typed message ──
+        async function sendUserMessage() {
+            if (isTyping) return;
+            const input = document.getElementById('chat-user-input');
+            const query = input.value.trim();
+            if (!query) return;
+            input.value = '';
+            closeChatMenu();
+            addUserMessage(query);
+            showTypingIndicator();
+            const res = await getBotResponse(query);
+            hideTypingIndicator();
+            addBotMessage(res.text, true);
+        }
+
+        function handleInputKeydown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) sendUserMessage();
+        }
+
+        function startNewConversation() {
+            window.speechSynthesis.cancel();
+            closeChatMenu();
+            showInitialGreeting();
+        }
+
+        // ── Quick Menu toggle ──
+        function toggleChatMenu() {
+            chatMenuOpen = !chatMenuOpen;
+            document.getElementById('chat-menu-popup').classList.toggle('open', chatMenuOpen);
+            document.getElementById('chat-menu-toggle').classList.toggle('menu-open', chatMenuOpen);
+        }
+        function closeChatMenu() {
+            chatMenuOpen = false;
+            const p = document.getElementById('chat-menu-popup');
+            const b = document.getElementById('chat-menu-toggle');
+            if (p) p.classList.remove('open');
+            if (b) b.classList.remove('menu-open');
+        }
+
+        // ── Text to Speech (fast rate, concurrent with typing) ──
+        function speakText(text) {
+            if (isMuted || !window.speechSynthesis) return;
+            window.speechSynthesis.cancel();
+            const clean = text
+                .replace(/\*\*(.*?)\*\*/g, '$1')
+                .replace(/[•\-\*]\s*/g, ', ')
+                .replace(/<[^>]+>/g, ' ')
+                .replace(/\s{2,}/g, ' ').trim();
+            const utter = new SpeechSynthesisUtterance(clean);
+            utter.rate = 0.9;
+            utter.pitch = 1.0;
+            utter.volume = 1.0;
+            const voices = window.speechSynthesis.getVoices();
+            // Prioritize English male voices (e.g. David on Windows, Google Male, Daniel/Alex/Fred/Guy on Apple)
+            const preferred = voices.find(function(v) {
+                const name = v.name.toLowerCase();
+                return (v.lang === 'en-US' || v.lang.startsWith('en')) &&
+                    (name.includes('male') || name.includes('david') || name.includes('mark') || name.includes('george') || name.includes('guy') || name.includes('alex') || name.includes('daniel') || name.includes('fred'));
+            })
+            || voices.find(function(v){ return v.lang === 'en-US' && v.name.includes('Google'); })
+            || voices.find(function(v){ return v.lang === 'en-US'; })
+            || voices.find(function(v){ return v.lang.startsWith('en'); });
+            if (preferred) utter.voice = preferred;
+            window.speechSynthesis.speak(utter);
+        }
+
+        // ── Mute / Unmute toggle ──
+        function toggleMute() {
+            isMuted = !isMuted;
+            const btn = document.getElementById('chat-mute-btn');
+            const icon = document.getElementById('volume-icon');
+            if (isMuted) {
+                btn.classList.remove('active');
+                btn.title = 'Unmute Voice';
+                icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>';
+                window.speechSynthesis.cancel();
+            } else {
+                btn.classList.add('active');
+                btn.title = 'Mute Voice';
+                icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
+                
+                if (!greetingRead) {
+                    speakText(greetingText);
+                    greetingRead = true;
+                } else {
+                    const botBubbles = document.querySelectorAll('.msg-bot');
+                    if (botBubbles.length > 0) {
+                        const lastBotBubble = botBubbles[botBubbles.length - 1];
+                        speakText(lastBotBubble.textContent);
+                    }
+                }
+            }
+        }
+
+        // ── Voice Input with interim results ──
+        function initSpeechRecognition() {
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SR) { document.getElementById('chat-mic-btn').style.display = 'none'; return; }
+            recognition = new SR();
+            recognition.continuous = false;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+            let finalTranscript = '';
+
+            recognition.onstart = function() {
+                isRecording = true;
+                finalTranscript = '';
+                const btn = document.getElementById('chat-mic-btn');
+                btn.classList.add('recording');
+                btn.title = 'Listening — click to stop';
+            };
+
+            recognition.onresult = function(e) {
+                let interim = '';
+                finalTranscript = '';
+                for (let i = 0; i < e.results.length; i++) {
+                    if (e.results[i].isFinal) finalTranscript += e.results[i][0].transcript;
+                    else interim += e.results[i][0].transcript;
+                }
+                // Show both final + interim in real-time
+                document.getElementById('chat-user-input').value = finalTranscript || interim;
+            };
+
+            recognition.onend = function() {
+                isRecording = false;
+                const btn = document.getElementById('chat-mic-btn');
+                btn.classList.remove('recording');
+                btn.title = 'Voice Input';
+                // Keep only final transcript
+                if (finalTranscript) {
+                    document.getElementById('chat-user-input').value = finalTranscript;
+                }
+                document.getElementById('chat-user-input').focus();
+            };
+
+            recognition.onerror = function(e) {
+                console.warn('Speech recognition error:', e.error);
+                isRecording = false;
+                const btn = document.getElementById('chat-mic-btn');
+                btn.classList.remove('recording');
+                btn.title = 'Voice Input';
+            };
+        }
+
+        function toggleVoiceInput() {
+            if (!recognition) initSpeechRecognition();
+            if (!recognition) return;
+            if (isRecording) recognition.stop(); else recognition.start();
+        }
+
+        // ── Groq API Serverless Route ──
+        async function callGroqAPI(query) {
+            const res = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: query, portfolioData: portfolioData })
+            });
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                throw new Error(errData.error || 'Server error ' + res.status);
+            }
+            const d = await res.json();
+            if (d && d.content) return d.content;
+            throw new Error('Invalid response');
+        }
+    </script>
+</body>
 </html>
