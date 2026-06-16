@@ -1127,15 +1127,19 @@
 
         /* ───── EXPERIENCE ───── */
         #experience {
-            background: var(--blue);
+            background: var(--grad);
             color: #fff;
-            padding: var(--section-pad)
+            padding: var(--section-pad);
+            position: relative;
+            overflow: hidden;
         }
 
         .exp-inner {
             max-width: 1320px;
             margin: 0 auto;
-            padding: 0 32px
+            padding: 0 32px;
+            position: relative;
+            z-index: 1;
         }
 
         .exp-header {
@@ -1143,11 +1147,11 @@
         }
 
         .exp-header .sec-tag {
-            color: rgba(255, 255, 255, 0.7)
+            color: rgba(255, 255, 255, 0.9)
         }
 
         .exp-header .sec-tag::before {
-            background: rgba(255, 255, 255, 0.5)
+            background: rgba(255, 255, 255, 0.75)
         }
 
         .exp-header .sec-h2 {
@@ -1155,11 +1159,11 @@
         }
 
         .exp-header .sec-h2 em {
-            color: rgba(168, 212, 255, 0.9)
+            color: #a8d4ff
         }
 
         .exp-header .sec-sub {
-            color: rgba(255, 255, 255, 0.65)
+            color: rgba(255, 255, 255, 0.95)
         }
 
         .timeline {
@@ -1174,7 +1178,20 @@
             top: 8px;
             bottom: 8px;
             width: 1px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1), transparent);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05), transparent);
+        }
+
+        .timeline-progress-line {
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--blue-bright) 0%, var(--teal) 100%);
+            box-shadow: 0 0 10px rgba(74, 158, 255, 0.8), 0 0 20px rgba(0, 180, 216, 0.4);
+            transform-origin: top;
+            transform: scaleY(0);
+            z-index: 1;
         }
 
         .tl-item {
@@ -1182,22 +1199,29 @@
             margin-bottom: 52px
         }
 
-        .tl-item::before {
-            content: '';
+        .tl-dot {
             position: absolute;
             left: -40px;
             top: 8px;
             width: 9px;
             height: 9px;
             border-radius: 50%;
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 2;
+        }
+
+        .tl-item.active-dot .tl-dot {
+            background: #ffffff;
+            box-shadow: 0 0 12px #ffffff, 0 0 0 4px rgba(74, 158, 255, 0.5);
+            transform: scale(1.3);
         }
 
         .tl-year {
             font-size: 11px;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.8);
             text-transform: uppercase;
             letter-spacing: 0.1em;
             margin-bottom: 8px;
@@ -1213,7 +1237,7 @@
 
         .tl-company {
             font-size: 15px;
-            color: rgba(168, 212, 255, 0.85);
+            color: rgba(168, 212, 255, 0.95);
             margin-bottom: 20px
         }
 
@@ -1225,7 +1249,7 @@
             display: flex;
             gap: 12px;
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.68);
+            color: rgba(255, 255, 255, 0.88);
             line-height: 1.65;
             padding: 10px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.07);
@@ -3041,6 +3065,123 @@
             #chatbot-trigger { bottom: 14px; right: 14px; width: 50px; height: 50px; }
             .chat-menu-grid { grid-template-columns: repeat(2, 1fr); }
         }
+
+        /* ───── SLIDER NAVIGATION BUTTONS ───── */
+        .slider-nav-btn {
+            position: absolute;
+            z-index: 10;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .slider-nav-btn:hover {
+            background: #ffffff;
+            color: var(--blue-light);
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .slider-nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        .slider-nav-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Certifications (Vertical Scroll) */
+        .cert-prev-btn {
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .cert-prev-btn:hover {
+            transform: translateX(-50%) scale(1.1);
+        }
+        .cert-prev-btn:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+
+        .cert-next-btn {
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .cert-next-btn:hover {
+            transform: translateX(-50%) scale(1.1);
+        }
+        .cert-next-btn:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+
+        /* Achievements (Horizontal Scroll) */
+        .ach-prev-btn {
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .ach-prev-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+        .ach-prev-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .ach-next-btn {
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .ach-next-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+        .ach-next-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        /* Skills/Expertise (Horizontal Ellipse Carousel) */
+        .skill-prev-btn {
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .skill-prev-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+        .skill-prev-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .skill-next-btn {
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .skill-next-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+        .skill-next-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        @media (max-width: 768px) {
+            .skill-prev-btn, .skill-next-btn {
+                display: none !important;
+            }
+        }
     </style>
 
 </head>
@@ -3263,6 +3404,13 @@
 
             <!-- Single 6-card ellipse carousel -->
             <div id="skills-carousel-wrap">
+                <!-- Nav arrows -->
+                <button class="slider-nav-btn skill-prev-btn" aria-label="Previous Skill">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <button class="slider-nav-btn skill-next-btn" aria-label="Next Skill">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
                 <div class="carousel-stage" id="carousel-stage">
 
                     <div class="c-card" data-index="0">
@@ -3523,6 +3671,13 @@
                     <p id="cert-desc">Secured First Position in an Ideathon by presenting "GradeMaster," an AI-based automated theory paper correction platform designed to evaluate subjective answers efficiently and consistently.</p>
                 </div>
                 <div class="cert-image-slider">
+                    <!-- Nav arrows -->
+                    <button class="slider-nav-btn cert-prev-btn" onclick="prevCertBtnClick()" aria-label="Previous Certification">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                    </button>
+                    <button class="slider-nav-btn cert-next-btn" onclick="nextCertBtnClick()" aria-label="Next Certification">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
                     <div class="cert-image-track" id="cert-track">
                         <div class="cert-image-item"><img alt="Cert 1"
                                 src="./certificates/WhatsApp Image 2026-04-24 at 3.05.34 PM.jpeg" /></div>
@@ -3576,7 +3731,9 @@
                 </div>
             </div>
             <div class="timeline">
+                <div class="timeline-progress-line"></div>
                 <div class="tl-item from-right">
+                    <div class="tl-dot"></div>
                     <div class="tl-year">2025 — Present</div>
                     <div class="tl-role">Software Developer Intern</div>
                     <div class="tl-company">eMudhra Ltd, Bengaluru</div>
@@ -3596,6 +3753,7 @@
                     </ul>
                 </div>
                 <div class="tl-item from-right" style="transition-delay:0.15s">
+                    <div class="tl-dot"></div>
                     <div class="tl-year">2022 — 2026</div>
                     <div class="tl-role">B.E. Information Science &amp; Engineering</div>
                     <div class="tl-company">Sri Venkateshwara College of Engineering, Bengaluru</div>
@@ -3607,6 +3765,9 @@
                             design</li>
                         <li>Won 2nd place at HackSpark and 1st place at Innovation Pitching Event</li>
                     </ul>
+                </div>
+            </div>
+        </div>
     </section>
     <!-- ACHIEVEMENTS -->
     <section class="sec" id="achievements" style="background:var(--off)">
@@ -3625,6 +3786,13 @@
                     <p id="ach-desc">Secured First Position in an Ideathon by presenting "GradeMaster," an AI-based automated theory paper correction platform designed to evaluate subjective answers efficiently and consistently.</p>
                 </div>
                 <div class="ach-image-slider">
+                    <!-- Nav arrows -->
+                    <button class="slider-nav-btn ach-prev-btn" onclick="prevAchBtnClick()" aria-label="Previous Achievement">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>
+                    <button class="slider-nav-btn ach-next-btn" onclick="nextAchBtnClick()" aria-label="Next Achievement">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
                     <div class="ach-image-track" id="ach-track">
                         <div class="ach-image-item">
                             <img alt="Ideathon" src="./achievements/WhatsApp Image 2026-04-24 at 8.45.31 PM.jpeg" />
@@ -4205,6 +4373,27 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
+        /* ── Timeline progress and dot activation ── */
+        gsap.to(".timeline-progress-line", {
+            scaleY: 1,
+            ease: "none",
+            scrollTrigger: {
+                trigger: ".timeline",
+                start: "top 70%",
+                end: "bottom 70%",
+                scrub: true
+            }
+        });
+
+        document.querySelectorAll('.tl-item').forEach(item => {
+            ScrollTrigger.create({
+                trigger: item,
+                start: "top 70%",
+                end: "bottom 70%",
+                toggleClass: "active-dot"
+            });
+        });
+
         /* ── Navbar scroll ── */
         window.addEventListener('scroll', () => {
             document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
@@ -4375,11 +4564,37 @@
                 var RX = 0;   /* set after we know wrap width */
 
                 var angle = 0;           /* master angle, radians */
-                var SPEED = 0.008;       /* radians per frame  ≈ full orbit ~13s */
-                var paused = false;
+                var targetAngle = 0;     /* target angle, radians */
+                // Auto-scroll interval for card-by-card rotation
+                var intervalTime = 3000;
+                var skillInterval = setInterval(function () {
+                    targetAngle += Math.PI * 2 / n;
+                }, intervalTime);
 
-                wrap.addEventListener('mouseenter', function () { paused = true; });
-                wrap.addEventListener('mouseleave', function () { paused = false; });
+                function resetSkillInterval() {
+                    clearInterval(skillInterval);
+                    skillInterval = setInterval(function () {
+                        targetAngle += Math.PI * 2 / n;
+                    }, intervalTime);
+                }
+
+                // Attach button event listeners
+                var prevBtn = wrap.querySelector('.skill-prev-btn');
+                var nextBtn = wrap.querySelector('.skill-next-btn');
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        targetAngle -= Math.PI * 2 / n;
+                        resetSkillInterval();
+                    });
+                }
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        targetAngle += Math.PI * 2 / n;
+                        resetSkillInterval();
+                    });
+                }
 
                 function frame() {
                     /* recalc RX every frame so it adapts to window resize */
@@ -4388,10 +4603,8 @@
                     var cx = wrap.offsetWidth / 2;
                     var cy = wrap.offsetHeight / 2 + 40;
 
-                    if (!paused) {
-                        angle += SPEED;
-                        if (angle > Math.PI * 2) angle -= Math.PI * 2;
-                    }
+                    // Smooth interpolation to target angle
+                    angle += (targetAngle - angle) * 0.08;
 
                     /* sort by depth so front cards paint on top */
                     var order = cards.map(function (card, i) {
@@ -4499,7 +4712,49 @@
             }
         }
 
-        setInterval(nextCert, 4000);
+        function prevCert() {
+            if (currentCert === 0) {
+                certTrack.style.transition = "none";
+                currentCert = certData.length;
+                certTrack.style.transform = `translateY(-${currentCert * 500}px)`;
+                certTrack.offsetHeight; // force reflow
+            }
+            currentCert--;
+
+            // Apply transition for the move
+            certTrack.style.transition = "transform 0.8s cubic-bezier(0.65, 0, 0.35, 1)";
+            certTrack.style.transform = `translateY(-${currentCert * 500}px)`;
+
+            // Update text
+            const textIdx = currentCert % certData.length;
+            certTitle.style.opacity = 0;
+            certDesc.style.opacity = 0;
+
+            setTimeout(() => {
+                certTitle.innerText = certData[textIdx].title;
+                certDesc.innerText = certData[textIdx].desc;
+                certTitle.style.opacity = 1;
+                certDesc.style.opacity = 1;
+            }, 400);
+        }
+
+        let certInterval = setInterval(nextCert, 3000);
+
+        function resetCertInterval() {
+            clearInterval(certInterval);
+            certInterval = setInterval(nextCert, 3000);
+        }
+
+        function nextCertBtnClick() {
+            nextCert();
+            resetCertInterval();
+        }
+
+        function prevCertBtnClick() {
+            prevCert();
+            resetCertInterval();
+        }
+
         // ── Achievements Slider Logic ──
         const achData = [
             { title: "IDEATHON-2024 — 1st Place", desc: "Secured First Position in an Ideathon by presenting \"GradeMaster,\" an AI-based automated theory paper correction platform designed to evaluate subjective answers efficiently and consistently." },
@@ -4538,7 +4793,48 @@
             }
         }
 
-        setInterval(nextAch, 3500);
+        function prevAch() {
+            if (currentAch === 0) {
+                achTrack.style.transition = "none";
+                currentAch = achData.length;
+                achTrack.style.transform = `translateX(-${currentAch * 100}%)`;
+                achTrack.offsetHeight; // force reflow
+            }
+            currentAch--;
+
+            // Apply transition for the move
+            achTrack.style.transition = "transform 0.8s cubic-bezier(0.65, 0, 0.35, 1)";
+            achTrack.style.transform = `translateX(-${currentAch * 100}%)`;
+
+            // Update text
+            const textIdx = currentAch % achData.length;
+            achTitle.style.opacity = 0;
+            achDesc.style.opacity = 0;
+
+            setTimeout(() => {
+                achTitle.innerText = achData[textIdx].title;
+                achDesc.innerText = achData[textIdx].desc;
+                achTitle.style.opacity = 1;
+                achDesc.style.opacity = 1;
+            }, 400);
+        }
+
+        let achInterval = setInterval(nextAch, 3000);
+
+        function resetAchInterval() {
+            clearInterval(achInterval);
+            achInterval = setInterval(nextAch, 3000);
+        }
+
+        function nextAchBtnClick() {
+            nextAch();
+            resetAchInterval();
+        }
+
+        function prevAchBtnClick() {
+            prevAch();
+            resetAchInterval();
+        }
 
         // ── Video Behavior Logic ──
         const portfolioVideo = document.getElementById('portfolio-video');
